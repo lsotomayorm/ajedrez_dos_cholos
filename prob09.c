@@ -2,6 +2,8 @@
 #include "figures.h"
 #include <stdio.h>
 
+#define SIZE 9
+
 struct Piezas{
   char** piece;
   int fila;
@@ -9,10 +11,10 @@ struct Piezas{
 };
 
 void display(){
-  struct Piezas piezas[16] = {
+  struct Piezas piezas[SIZE] = {
     {reverse(queen), 0, 5},
     {reverse(king), 0, 7},
-    {reverse(rook), 1, 2},
+    {reverse(rook), 1, 0},
     {reverse(rook), 1, 4},
     {pawn, 2, 4},
     {queen, 2, 7},
@@ -29,16 +31,21 @@ void display(){
     for(int j=0; j<8; j++){
       squareStart = reverse(squareStart);
       piezaTemp = squareStart;
-      for(int k=0; k < 16; k++){
+      for(int k=0; k < SIZE; k++){
         if(piezas[k].fila == i && piezas[k].columna == j){
           squareStart = superImpose(piezas[k].piece, squareStart);
         }
       }
-      row = join(row, squareStart);
+      if(row == NULL)
+        row = squareStart;
+      else
+        row = join(row, squareStart);
       squareStart = piezaTemp;
     }
     if(board == NULL) board = row;
     else board = up(board, row);
+    row = NULL;
+    squareStart = reverse(squareStart);
   }
   interpreter(board);
 }
